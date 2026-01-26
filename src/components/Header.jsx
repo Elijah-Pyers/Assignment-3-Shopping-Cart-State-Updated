@@ -1,6 +1,6 @@
 import "./Header.css";
 
-function Header({ storeName }) {
+export default function Header({ storeName = "ComponentCorner", cartCount = 0 }) {
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -11,22 +11,20 @@ function Header({ storeName }) {
             Home
           </a>
           <a className="nav-link" href="#">
-            Shop
+            Products
           </a>
           <a className="nav-link" href="#">
-            Deals
-          </a>
-          <a className="nav-link" href="#">
-            Contact
+            Support
           </a>
         </nav>
 
-        <button className="header-cta" type="button">
-          Sign In
-        </button>
+        <div className="cart-container" aria-label="Shopping cart">
+          <span className="cart-icon" aria-hidden="true">
+            🛒
+          </span>
+          {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+        </div>
       </div>
     </header>
   );
 }
-
-export default Header;

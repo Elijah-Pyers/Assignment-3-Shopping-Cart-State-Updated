@@ -54,3 +54,41 @@
 .header-cta:hover {
   transform: translateY(-1px);
 }
+
+.cart-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #e3e3e3;
+  background: white;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.cart-container:hover {
+  transform: translateY(-1px);
+}
+
+.cart-icon {
+  font-size: 20px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ff4757;
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: 800;
+}
+

@@ -1,4 +1,4 @@
-/* App-level layout styling */
+/* App-level layout styling (ChatGPT) */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -45,4 +45,43 @@ body {
   .products {
     grid-template-columns: 1fr;
   }
+}
+
+.app {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.main {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.cart-section {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.empty-cart {
+  padding: 16px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
 }
