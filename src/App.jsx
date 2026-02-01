@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Header from "./components/header";
-import Hero from "./components/Hero";
-import ProductCard from "./components/ProductCard";
-import CartItem from "./components/CartItem";
+
+import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+// Pages
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import CartPage from "./pages/CartPage";
+
+const CART_KEY = "componentcorner-cart";
+
 function App() {
-  // Step 2: Products array (inside App, outside return)
+  // Products array (shared across routes)
   const products = [
     {
       id: 1,
@@ -53,93 +60,88 @@ function App() {
     },
   ];
 
-  // Step 3: Cart state
-  const [cart, setCart] = useState([]);
+  // Cart state (array of product objects). Persist to localStorage.
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem(CART_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.warn("Could not load cart from localStorage:", error);
+      return [];
+    }
+  });
 
-  // Step 4: addToCart (never mutate state)
+  // Save cart whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch (error) {
+      console.warn("Could not save cart to localStorage:", error);
+    }
+  }, [cart]);
+
+  // Add to cart: push a product object (duplicates allowed)
   const addToCart = (product) => {
-    setCart([...cart, product]);
-    // Optional debugging:
-    // console.log("Cart:", [...cart, product]);
+    setCart((prev) => [...prev, product]);
   };
 
-  // Step 11: removeFromCart using filter
-  // Use index so removing works even if the same product is added multiple times.
+  // Remove by index so duplicates can be removed independently
   const removeFromCart = (removeIndex) => {
-    setCart(cart.filter((_, index) => index !== removeIndex));
+    setCart((prev) => prev.filter((_, index) => index !== removeIndex));
   };
 
-  // Step 12: total with reduce
   const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div className="app">
-      {/* Step 7: pass cart count to Header */}
-      <Header storeName="ComponentCorner" cartCount={cart.length} />
+    <BrowserRouter>
+      <div className="app">
+        <Header storeName="ComponentCorner" cartCount={cart.length} />
 
-      <Hero
-        title="Build your setup, one component at a time."
-        subtitle="Clean, curated gear for developers who like reusable UI and organized code."
-        ctaText="Shop Featured"
-        image="https://placehold.co/1200x400/111111/ffffff?text=ComponentCorner+Featured"
-      />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
 
-      <main className="page">
-        <h2 className="section-title">Featured Products</h2>
+          <Route
+            path="/products"
+            element={<ProductsPage products={products} addToCart={addToCart} />}
+          />
 
-        <section className="products">
-          {/* Step 2 + map(): render ProductCards from products array */}
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={addToCart}
-            />
-          ))}
-        </section>
+          <Route
+            path="/products/:id"
+            element={
+              <ProductDetailsPage products={products} addToCart={addToCart} />
+            }
+          />
 
-        {/* Cart Section */}
-        <section className="cart-section">
-          <h2 className="section-title">Your Cart</h2>
+          <Route
+            path="/cart"
+            element={
+              <CartPage
+                cart={cart}
+                cartTotal={cartTotal}
+                removeFromCart={removeFromCart}
+              />
+            }
+          />
 
-          {/* Step 13: conditional rendering for empty cart */}
-          {cart.length === 0 ? (
-            <div className="empty-cart">
-              <h3>Your cart is empty</h3>
-              <p>Add an item to see it appear here.</p>
-            </div>
-          ) : (
-            <>
-              {/* Step 10: map cart items */}
-              <div className="cart-items">
-                {cart.map((item, index) => (
-                  <CartItem
-                    key={`${item.id}-${index}`}
-                    item={item}
-                    index={index}
-                    onRemove={removeFromCart}
-                  />
-                ))}
-              </div>
+          <Route
+            path="*"
+            element={
+              <main className="page">
+                <h2>Page Not Found</h2>
+              </main>
+            }
+          />
+        </Routes>
 
-              {/* Step 12: show total */}
-              <div className="cart-total">
-                <span>Total:</span>
-                <strong>${cartTotal.toFixed(2)}</strong>
-              </div>
-            </>
-          )}
-        </section>
-      </main>
-
-      <Footer
-        storeName="ComponentCorner"
-        email="support@componentcorner.example"
-        phone="(555) 123-4567"
-        address="123 React Lane, Phoenix, AZ"
-        copyright={`© ${new Date().getFullYear()} ComponentCorner. All rights reserved.`}
-      />
-    </div>
+        <Footer
+          storeName="ComponentCorner"
+          email="support@componentcorner.example"
+          phone="(555) 123-4567"
+          address="123 React Lane, Phoenix, AZ"
+          copyright={`© ${new Date().getFullYear()} ComponentCorner. All rights reserved.`}
+        />
+      </div>
+    </BrowserRouter>
   );
 }
 

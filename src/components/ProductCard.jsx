@@ -1,61 +1,32 @@
 import "./ProductCard.css";
+import { Link } from "react-router-dom";
 
-function ProductCard({
-  product,
-  onAddToCart,
-  name,
-  price,
-  image,
-  description,
-}) {
-  
-  const resolvedName = product?.name ?? name;
-  const resolvedPrice = product?.price ?? price;
-  const resolvedImage = product?.image ?? image;
-  const resolvedDescription = product?.description ?? description;
-
-  const handleAddToCart = () => {
-    // Prefer the full product object if provided
-    if (onAddToCart) {
-      const itemToAdd = product ?? {
-        id: crypto?.randomUUID?.() ?? Date.now(),
-        name: resolvedName,
-        price: Number(resolvedPrice),
-        image: resolvedImage,
-        description: resolvedDescription,
-      };
-
-      onAddToCart(itemToAdd);
-    }
-  };
-
+function ProductCard({ product, onAddToCart }) {
   return (
     <article className="product-card">
-      <div className="product-image-wrap">
-        <img className="product-image" src={resolvedImage} alt={resolvedName} />
-      </div>
+      <Link
+        to={`/products/${product.id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <img className="product-image" src={product.image} alt={product.name} />
+        <h3 className="product-name">{product.name}</h3>
+      </Link>
 
-      <div className="product-body">
-        <header className="product-header">
-          <h3 className="product-name">{resolvedName}</h3>
-          <p className="product-price">${Number(resolvedPrice).toFixed(2)}</p>
-        </header>
+      <p className="product-price">${product.price.toFixed(2)}</p>
+      <p className="product-description">{product.description}</p>
 
-        <p className="product-description">{resolvedDescription}</p>
+      <div className="product-actions">
+        <button
+          className="btn btn-primary"
+          type="button"
+          onClick={() => onAddToCart(product)}
+        >
+          Add to Cart
+        </button>
 
-        <div className="product-actions">
-          <button
-            className="btn btn-primary"
-            type="button"
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </button>
-
-          <button className="btn btn-ghost" type="button">
-            View
-          </button>
-        </div>
+        <Link className="btn btn-ghost" to={`/products/${product.id}`}>
+          View
+        </Link>
       </div>
     </article>
   );
