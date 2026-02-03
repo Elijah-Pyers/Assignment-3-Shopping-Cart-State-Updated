@@ -1,34 +1,29 @@
 import "./Header.css";
-import { Link, NavLink } from "react-router-dom";
 
 export default function Header({ storeName = "ComponentCorner", cartCount = 0 }) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <h1 className="brand">
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            {storeName}
-          </Link>
-        </h1>
+        <h1 className="brand">{storeName}</h1>
 
         <nav className="nav">
-          <NavLink className="nav-link" to="/">
+          <a className="nav-link" href="#">
             Home
-          </NavLink>
-          <NavLink className="nav-link" to="/products">
+          </a>
+          <a className="nav-link" href="#">
             Products
-          </NavLink>
-          <NavLink className="nav-link" to="/cart">
-            Cart
-          </NavLink>
+          </a>
+          <a className="nav-link" href="#">
+            Support
+          </a>
         </nav>
 
-        <Link to="/cart" className="cart-container" aria-label="Shopping cart">
+        <div className="cart-container" aria-label="Shopping cart">
           <span className="cart-icon" aria-hidden="true">
             🛒
           </span>
           {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-        </Link>
+        </div>
       </div>
     </header>
   );
